@@ -104,8 +104,8 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Тренировка: плавание."""
     LEN_STEP: float = 1.38
-    SWM_COEF: float = 1.1
-    SWM_COEF_SECOND: int = 2
+    SWM_MEAN: float = 1.1
+    SWM_MEAN_INT: int = 2
 
     def __init__(self,
                  action: int,
@@ -125,22 +125,24 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        return ((self.get_mean_speed() + self.SWM_COEF)
-                * self.SWM_COEF_SECOND * self.weight * self.duration)
+        return ((self.get_mean_speed() + self.SWM_MEAN)
+                * self.SWM_MEAN_INT * self.weight * self.duration)
+
+
+tranining_types: list = {'SWM': Swimming,
+                         'RUN': Running,
+                         'WLK': SportsWalking
+                         }
 
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    tranining_types = {'SWM': Swimming,
-                       'RUN': Running,
-                       'WLK': SportsWalking
-                       }
     return tranining_types[workout_type](*data)
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    info: str = training.show_training_info()
+    info: InfoMessage = training.show_training_info()
     print(info.get_message())
 
 
